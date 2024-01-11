@@ -1,3 +1,6 @@
+import 'package:demo_ss1/form_example.dart';
+import 'package:demo_ss1/grid_view_example.dart';
+import 'package:demo_ss1/stack_example.dart';
 import 'package:flutter/material.dart';
 
 import 'entity/student_entity.dart';
@@ -41,8 +44,8 @@ class _TabBarExampleState extends State<TabBarExample> with TickerProviderStateM
                 ),
               ),
               Container(
-                width: double.infinity,
-                height: 300,
+                width: 200,
+                height: 600,
                 child: TabBarView(
                   controller: _tabController,
                   children: [
@@ -50,10 +53,14 @@ class _TabBarExampleState extends State<TabBarExample> with TickerProviderStateM
                         scrollDirection: Axis.vertical,
                         itemCount: students.length,
                         itemBuilder: (BuildContext context, index) {
-                          return SizedBox(
+                          return Row(
+                            children: [
+                            SizedBox(
                             width: 200,
                             height: 300,
                             child: Container(
+                              width: 100,
+                              height: 300,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
                                 image: DecorationImage(
@@ -66,23 +73,25 @@ class _TabBarExampleState extends State<TabBarExample> with TickerProviderStateM
                                 children: [
                                   Text(
                                     students[index].name,
-                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
                                   ),
                                   Text(
                                     "Age: ${students[index].age}",
-                                    style: TextStyle(fontSize: 16),
+                                    style: TextStyle(fontSize: 16,color: Colors.white),
                                   ),
                                   Text(
                                     "Address: ${students[index].address}",
-                                    style: TextStyle(fontSize: 16),
+                                    style: TextStyle(fontSize: 16,color: Colors.white),
                                   ),
                                 ],
                               ),
                             ),
+                          )
+                            ],
                           );
                         }),
-                    Text(" this is tabbar for like"),
-                    Text(" this is tabbar for like"),
+                    GridViewExample(),
+                   Text("text")
                   ],
                 ),
               ),

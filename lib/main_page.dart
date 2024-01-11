@@ -3,6 +3,8 @@ import 'package:demo_ss1/tabbar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
+import 'form_example.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -33,6 +35,7 @@ class _MainPageState extends State<MainPage> {
             children:[
               const HomePage(),
               TabBarExample(),
+              FormExample(),
             ],
           ),
           bottomNavigationBar: SalomonBottomBar(
@@ -47,6 +50,7 @@ class _MainPageState extends State<MainPage> {
             items: [
               SalomonBottomBarItem(icon: Icon(Icons.home), title: Text("Home")),
               SalomonBottomBarItem(icon: Icon(Icons.search), title: Text("Search")),
+              SalomonBottomBarItem(icon: Icon(Icons.settings), title: Text("Setting")),
             ]
           ),
         ),
