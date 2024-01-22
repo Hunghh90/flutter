@@ -1,8 +1,5 @@
-import 'package:demo_ss1/form_example.dart';
 import 'package:demo_ss1/future_example.dart';
-import 'package:demo_ss1/grid_view_example.dart';
 import 'package:demo_ss1/responesive_example.dart';
-import 'package:demo_ss1/stack_example.dart';
 import 'package:flutter/material.dart';
 
 import 'entity/student_entity.dart';
@@ -43,7 +40,7 @@ class _TabBarExampleState extends State<TabBarExample> with TickerProviderStateM
                   ),
                 ),
 
-              Container(
+              SizedBox(
                 width: 200,
                 height: 350,
                 child: TabBarView(
@@ -53,14 +50,14 @@ class _TabBarExampleState extends State<TabBarExample> with TickerProviderStateM
                         scrollDirection: Axis.vertical,
                         itemCount: students.length,
                         itemBuilder: (BuildContext context, index) {
-                          return Container(
+                          return SizedBox(
                             width: double.infinity,
                             height: 300,
                             child: Row(
                               children: [
                                 SizedBox(
                                   width: 200,
-                                  height: 300,
+                                  height: 350,
                                   child: Container(
                                     width: double.infinity,
                                     height: 300,
@@ -94,8 +91,8 @@ class _TabBarExampleState extends State<TabBarExample> with TickerProviderStateM
                             ),
                           );
                         }),
-                    FuturePage(),
-                   ResponesivePage()
+                    const FuturePage(),
+                   const ResponesivePage()
                   ],
                 ),
               ),

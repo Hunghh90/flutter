@@ -18,6 +18,7 @@ class _FormExampleState extends State<FormExample> {
   List<Student> students = [];
 
   final _formKey = GlobalKey<FormState>();
+  int _idEdit = 0;
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
   final _addressController = TextEditingController();
@@ -104,16 +105,33 @@ class _FormExampleState extends State<FormExample> {
                       String image = _imageController.text;
                       Student student = Student(
                           name: name, age: age, address: address, image: image);
-                      int id = await SQLHelper.createItem(student);
-                      if (id != 0) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Success')),
-                        );
-                        setState(() {});
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Fail')),
-                        );
+                      if(_idEdit == 0) {
+                        var _id = await SQLHelper.createItem(student);
+                        if (_id != 0) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Success')),
+                          );
+                          setState(() {
+                            _nameController.clear();
+                            _ageController.clear();
+                            _addressController.clear();
+                            _imageController.clear();
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Fail')),
+                          );
+                        }
+                      }else{
+                        student.id = _idEdit;
+                        await SQLHelper.updateItem(student);
+                        setState((){
+                          _idEdit = 0;
+                          _nameController.clear();
+                          _ageController.clear();
+                          _addressController.clear();
+                          _imageController.clear();
+                        });
                       }
                     }
                   },
@@ -174,6 +192,7 @@ class _FormExampleState extends State<FormExample> {
                                                   await SQLHelper.getItem(
                                                       students[index].id
                                                           as int);
+                                              _idEdit = int.parse(student.id.toString());
                                               _nameController.text =
                                                   student.name;
                                               _ageController.text =

@@ -7,7 +7,7 @@ class SQLHelper {
 
   // create table
   static Future<void> createTables(Database database) async {
-    await database.execute("""CREATE TABLE students(
+    await database.execute("""CREATE TABLE  IF NOT EXISTS students(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         name TEXT,
         age INTEGER,
@@ -22,15 +22,7 @@ class SQLHelper {
   static Future<Database> db() async {
     var factory = databaseFactoryFfiWeb;
     var db = await factory.openDatabase('my_db.db');
-    await db.execute("""CREATE TABLE IF NOT EXISTS students(
-        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-        name TEXT,
-        age INTEGER,
-        image TEXT,
-        address TEXT,
-        createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-      )
-      """);
+    await createTables(db);
     return db;
   }
 
