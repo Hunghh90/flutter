@@ -3,6 +3,7 @@ import 'package:demo_ss1/tabbar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
+import 'first_page.dart';
 import 'form_example.dart';
 
 class MainPage extends StatefulWidget {
@@ -35,7 +36,7 @@ class _MainPageState extends State<MainPage> {
             children:[
               const HomePage(),
               TabBarExample(),
-              FormExample(),
+              FirstPage(),
             ],
           ),
           bottomNavigationBar: SalomonBottomBar(

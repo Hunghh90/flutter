@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'detail.dart';
 import 'entity/student_entity.dart';
+import 'helper/sql_helper.dart';
 
 class FormExample extends StatefulWidget {
   const FormExample({super.key});
+
+  static const String routeName = "/formPage";
 
   @override
   State<FormExample> createState() => _FormExampleState();
 }
 
 class _FormExampleState extends State<FormExample> {
-
   List<Student> students = [];
+
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
@@ -28,116 +32,176 @@ class _FormExampleState extends State<FormExample> {
       child: SafeArea(
         child: Scaffold(
             body: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                        hintText: "your name...",
-                        labelText: "Input your name"
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Input your name";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20,),
-                  TextFormField(
-                    controller: _ageController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    decoration: InputDecoration(
-                        hintText: "your age...",
-                        labelText: "Input your age"
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Input your age";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20,),
-                  TextFormField(
-                    controller: _addressController,
-                    decoration: InputDecoration(
-                        hintText: "your address...",
-                        labelText: "Input your address"
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Input your address";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20,),
-                  TextFormField(
-                    controller: _imageController,
-                    decoration: InputDecoration(
-                        hintText: "your image...",
-                        labelText: "Input your image"
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Input your image";
-                      }
-                      return null;
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          String name = _nameController.text;
-                          int age = int.parse(_ageController.text);
-                          String address = _addressController.text;
-                          String image = _imageController.text;
-                          Student student = Student(name: name,
-                              age: age,
-                              address: address,
-                              image: image);
-                          setState(() {
-                            students.add(student); //
-                          });
-
-                        }
-                      },
-                      child: Text("submit"),
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-                  Text("List",style: TextStyle(color: Colors.green,fontSize: 50,),),
-                  Expanded(
-
-                    child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: students.length,
-                        itemBuilder: (BuildContext context, index) {
-                          return Column(
-                            children: [
-                              Container(
-                                  child: Text(
-                                      "${students[index].name} - ${students[index]
-                                          .address} - ${students[index]
-                                          .name} - ${students[index].image}")
-                              )
-                            ],
-                          );
-                        }
-                    ),
-                  )
-                ],
-
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                    hintText: "your name...", labelText: "Input your name"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Input your name";
+                  }
+                  return null;
+                },
               ),
-            )
-        ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                controller: _ageController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                decoration: InputDecoration(
+                    hintText: "your age...", labelText: "Input your age"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Input your age";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                controller: _addressController,
+                decoration: InputDecoration(
+                    hintText: "your address...",
+                    labelText: "Input your address"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Input your address";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                controller: _imageController,
+                decoration: InputDecoration(
+                    hintText: "your image...", labelText: "Input your image"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Input your image";
+                  }
+                  return null;
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      String name = _nameController.text;
+                      int age = int.parse(_ageController.text);
+                      String address = _addressController.text;
+                      String image = _imageController.text;
+                      Student student = Student(
+                          name: name, age: age, address: address, image: image);
+                      int id = await SQLHelper.createItem(student);
+                      if (id != 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Success')),
+                        );
+                        setState(() {});
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Fail')),
+                        );
+                      }
+                    }
+                  },
+                  child: Text("submit"),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "List",
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 50,
+                ),
+              ),
+              Expanded(
+                  child: FutureBuilder(
+                      future: SQLHelper.getItems(),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            return Text("Not data");
+                          case ConnectionState.waiting:
+                          case ConnectionState.active:
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          case ConnectionState.done:
+                            if (snapshot.hasError) {
+                              return Text("error get data");
+                            } else {
+                              students = snapshot.data!;
+                              return ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: snapshot.data?.length,
+                                  itemBuilder: (BuildContext context, index) {
+                                    return ListTile(
+                                      tileColor: Colors.green.withOpacity(0.4),
+                                      title: GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).pushNamed(
+                                              Detail.routeName,
+                                              arguments: snapshot.data?[index]);
+                                        },
+                                        child: Text(
+                                          students[index].name,
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                      ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(Icons.edit),
+                                            onPressed: () async {
+                                              Student student =
+                                                  await SQLHelper.getItem(
+                                                      students[index].id
+                                                          as int);
+                                              _nameController.text =
+                                                  student.name;
+                                              _ageController.text =
+                                                  student.age.toString();
+                                              _addressController.text =
+                                                  student.address;
+                                              _imageController.text =
+                                                  student.image;
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: () async {
+                                              await SQLHelper.deleteItem(
+                                                  students[index].id as int);
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            }
+                        }
+                      }))
+            ],
+          ),
+        )),
       ),
     );
   }
